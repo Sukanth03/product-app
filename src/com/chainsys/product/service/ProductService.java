@@ -20,5 +20,4 @@ public interface ProductService {
 	
 	void updatedate(Product Product) throws ProductNotFoundException;
 
-
 }
