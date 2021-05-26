@@ -93,6 +93,18 @@ public class ProductClient {
 
 			}
 			break;
+		case 8:
+			System.out.println("Find the Product By date");
+			
+			try {
+			 	date = "01/01/2023";
+				dateFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+				Product product=service.findByDate(LocalDate.parse(date,dateFormat));
+
+				System.out.println(product);
+			} catch (ProductNotFoundException e) {
+			}
+			break;
 			
 		default:
 			break;
