@@ -7,9 +7,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-
+import java.util.List;
 import com.chainsys.product.model.Product;
 
 public class ProductDAOImpl implements ProductDAO {
@@ -100,7 +101,7 @@ public class ProductDAOImpl implements ProductDAO {
 		}
 
 	}
-	
+	@Override
 	public Product findByName(String name) {
 		Product product = null;
 		try {
@@ -115,12 +116,11 @@ public class ProductDAOImpl implements ProductDAO {
 		}
 		return product;
 	}
-	
 	@Override
-	public void updatedate(Product product) {
+	public void update_expire(Product product) {
 		try {
 			pstmt = con.prepareStatement("update product_2606 set expiry_date=? where id=?");
-			pstmt.setDate(1,Date.valueOf( product.getExpiryDate()));
+			pstmt.setDate(1, Date.valueOf(product.getExpiryDate()));
 			pstmt.setInt(2, product.getId());
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -128,10 +128,28 @@ public class ProductDAOImpl implements ProductDAO {
 		}
 
 	}
+	
+	@Override
+	public List<String> findAllName() {
+		ArrayList nameList = null;
+		try {
+			pstmt = con.prepareStatement("select Name from product_2606");
+			rs = pstmt.executeQuery();
+			nameList = new ArrayList<>();
+			while (rs.next()) {
+				nameList.add(rs.getString("name"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return nameList;
+	}
+
+	@Override
 	public Product findByDate(LocalDate expiryDate) {
 		Product product = null;
 		try {
-			pstmt = con.prepareStatement("select * from product_2611 where expiry_date=?");
+			pstmt = con.prepareStatement("select * from product_2606 where expiry_date=?");
 			pstmt.setDate(1, Date.valueOf(expiryDate));
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
@@ -143,7 +161,39 @@ public class ProductDAOImpl implements ProductDAO {
 
 		return product;
 	}
-
-	
-
-}
+	@Override
+	public void delete_name(String name) {
+		try {
+			pstmt = con.prepareStatement("delete product_2606 where name=?");
+			pstmt.setString(1, name);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	@Override
+	public void delete_id(int id) {
+		try {
+			pstmt = con.prepareStatement("delete product_2606 where id=?");
+			pstmt.setInt(1, id);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	@Override
+	public List<Integer> findAllId(){
+		ArrayList idList = null;
+		try {
+			pstmt = con.prepareStatement("select id from product_2606");
+			rs = pstmt.executeQuery();
+			idList = new ArrayList<>();
+			while (rs.next()) {
+				idList.add(rs.getInt("id"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return idList;
+	}
+	}
